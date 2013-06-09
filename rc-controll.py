@@ -12,8 +12,10 @@ import socket
 # allow multiple joysticks
 joy = []
 
-HOST = '195.160.169.42'    # The remote host
+HOST = '10.0.0.255'    # The remote host
 PORT = 50007              # The same port as used by the server
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.connect((HOST, PORT))
 
 value = 150
 # handle joystick event
@@ -40,13 +42,16 @@ def handleJoyEvent(e):
 
             ## Send Servo Value to boat
             if (axis == "X"):
-                pos = e.dict['value']
-               
                 print(str)
+                ## convert joystick position to servo increment
+                x = (225*e.dict['value'])+375
+                s.sendall('0;' + repr(x))
+                print(x)
             elif (axis == "Throttle"):
                 print(str)
                 ## convert joystick position to servo increment
                 x = (225*e.dict['value'])+375
+                s.sendall('1;' + repr(x))
                 print(x)
 
 		
